@@ -1,22 +1,50 @@
 package main;
 
+import entities.Player;
+import lvls.LevelManager;
+
+import java.awt.*;
+
 public class Game implements Runnable {
 
+    public final static int TILES_DEFAULT_SIZE = 32;
+    public final static float SCALE = 2.0f;
+    public final static int TILES_IN_WIDTH = 26;
+    public final static int TILES_IN_HEIGHT = 14;
+    public final static int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
+    public final static int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
+    public static final int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
     private final int FPS_SET = 120;
     private final int UPS_SET = 200;
     private GameWindow gameWindow;
     private GamePanel gamePanel;
     private Thread gameThread;
+    private Player player;
+    private LevelManager levelManager;
+
 
     public Game() {
-        gamePanel = new GamePanel();
+        initClasses();
+        gamePanel = new GamePanel(this);
         gameWindow = new GameWindow(gamePanel);
         gamePanel.requestFocus();
         startGameLoop();
     }
 
-    public void update(){
-        gamePanel.updateGame();
+    private void initClasses() {
+        player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE));
+        levelManager = new LevelManager(this);
+
+    }
+
+    public void update() {
+        player.update();
+        levelManager.update();
+    }
+
+    public void render(Graphics g) {
+        levelManager.draw(g);
+        player.render(g);
     }
 
     private void startGameLoop() {
@@ -47,12 +75,12 @@ public class Game implements Runnable {
             deltaF += (currentTime - previousTime) / timePerFrame;
             previousTime = currentTime;
 
-            if(deltaU >= 1){
+            if (deltaU >= 1) {
                 update();
                 updates++;
                 deltaU--;
             }
-            if(deltaF >= 1){
+            if (deltaF >= 1) {
                 gamePanel.repaint();
                 gamePanel.getToolkit().sync();
                 frames++;
@@ -61,10 +89,18 @@ public class Game implements Runnable {
 
             if (System.currentTimeMillis() - lastCheck >= 1000) {
                 lastCheck = System.currentTimeMillis();
-                System.out.println("FPS: " + frames+ ", UPS: " + updates);
+                System.out.println("FPS: " + frames + ", UPS: " + updates);
                 frames = 0;
                 updates = 0;
             }
         }
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void windowFocusLost() {
+        player.resetDirBooleans();
     }
 }
