@@ -3,7 +3,7 @@ package main;
 import java.awt.Graphics;
 
 import entities.Player;
-import levels.LevelManager;
+import lvls.LevelManager;
 
 public class Game implements Runnable {
 
@@ -36,7 +36,7 @@ public class Game implements Runnable {
 	private void initClasses() {
 		levelManager = new LevelManager(this);
 		player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE));
-		player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
+		player.loadLvlData(levelManager.getCurrentLevel().getLvlData());
 
 	}
 

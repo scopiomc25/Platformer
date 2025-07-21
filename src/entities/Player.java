@@ -1,12 +1,12 @@
 package entities;
 
-import static utilz.Constants.PlayerConstants.*;
-import static utilz.HelpMethods.*;
+import static utils.Constants.PlayerConstants.*;
+import static utils.HelpMethods.*;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import main.Game;
-import utilz.LoadSave;
+import utils.LoadSave;
 
 public class Player extends Entity {
 	private BufferedImage[][] animations;
@@ -49,7 +49,7 @@ public class Player extends Entity {
 		if (aniTick >= aniSpeed) {
 			aniTick = 0;
 			aniIndex++;
-			if (aniIndex >= GetSpriteAmount(playerAction)) {
+			if (aniIndex >= getSpriteAmount(playerAction)) {
 				aniIndex = 0;
 				attacking = false;
 			}
@@ -68,13 +68,13 @@ public class Player extends Entity {
 
 		if (inAir) {
 			if (airSpeed < 0)
-				playerAction = JUMP;
+				playerAction = JUMPING;
 			else
 				playerAction = FALLING;
 		}
 
 		if (attacking)
-			playerAction = ATTACK_1;
+			playerAction = HITTING;
 
 		if (startAni != playerAction)
 			resetAniTick();
@@ -101,11 +101,11 @@ public class Player extends Entity {
 			xSpeed += playerSpeed;
 
 		if (!inAir)
-			if (!IsEntityOnFloor(hitbox, lvlData))
+			if (!isEntityOnFloor(hitbox, lvlData))
 				inAir = true;
 
 		if (inAir) {
-			if (CanMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
+			if (canMoveHere(hitbox.x, hitbox.y + airSpeed, hitbox.width, hitbox.height, lvlData)) {
 				hitbox.y += airSpeed;
 				airSpeed += gravity;
 				updateXPos(xSpeed);
@@ -138,10 +138,10 @@ public class Player extends Entity {
 	}
 
 	private void updateXPos(float xSpeed) {
-		if (CanMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData)) {
+		if (canMoveHere(hitbox.x + xSpeed, hitbox.y, hitbox.width, hitbox.height, lvlData)) {
 			hitbox.x += xSpeed;
 		} else {
-			hitbox.x = GetEntityXPosNextToWall(hitbox, xSpeed);
+			hitbox.x = getEntityXPosNextToWall(hitbox, xSpeed);
 		}
 
 	}
@@ -150,16 +150,16 @@ public class Player extends Entity {
 
 		BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
 
-		animations = new BufferedImage[9][6];
-		for (int j = 0; j < animations.length; j++)
-			for (int i = 0; i < animations[j].length; i++)
-				animations[j][i] = img.getSubimage(i * 64, j * 40, 64, 40);
+		animations = new BufferedImage[7][8];
+		for (int i = 0; i < animations.length; i++)
+			for (int j = 0; j < animations[i].length; j++)
+				animations[i][j] = img.getSubimage(j * 64, i * 40, 64, 40);
 
 	}
 
 	public void loadLvlData(int[][] lvlData) {
 		this.lvlData = lvlData;
-		if (!IsEntityOnFloor(hitbox, lvlData))
+		if (!isEntityOnFloor(hitbox, lvlData))
 			inAir = true;
 
 	}
