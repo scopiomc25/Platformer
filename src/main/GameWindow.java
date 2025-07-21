@@ -1,41 +1,37 @@
 package main;
 
-import utils.LoadSave;
-
-import javax.swing.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
-import java.awt.image.BufferedImage;
+
+import javax.swing.JFrame;
 
 public class GameWindow {
+	private JFrame jframe;
 
-    private JFrame jFrame;
-    private BufferedImage img;
+	public GameWindow(GamePanel gamePanel) {
 
-    public GameWindow(GamePanel gamePanel) {
-        img = LoadSave.GetSpriteAtlas("ball.png");
+		jframe = new JFrame();
 
-        jFrame = new JFrame();
+		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		jframe.add(gamePanel);
+		jframe.setLocationRelativeTo(null);
+		jframe.setResizable(false);
+		jframe.pack();
+		jframe.setVisible(true);
+		jframe.addWindowFocusListener(new WindowFocusListener() {
 
-        jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        jFrame.add(gamePanel);
-        jFrame.pack();
-        jFrame.setTitle("Platformer Game");
-        jFrame.setIconImage(img);
-        jFrame.setResizable(false);
-        jFrame.setLocationRelativeTo(null);
+			@Override
+			public void windowLostFocus(WindowEvent e) {
+				gamePanel.getGame().windowFocusLost();
+			}
 
-        jFrame.setVisible(true);
-        jFrame.addWindowFocusListener(new WindowFocusListener() {
-            @Override
-            public void windowGainedFocus(WindowEvent e) {
+			@Override
+			public void windowGainedFocus(WindowEvent e) {
+				// TODO Auto-generated method stub
 
-            }
+			}
+		});
 
-            @Override
-            public void windowLostFocus(WindowEvent e) {
-                gamePanel.getGame().windowFocusLost();
-            }
-        });
-    }
+	}
+
 }
