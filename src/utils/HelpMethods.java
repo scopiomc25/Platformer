@@ -2,6 +2,9 @@ package utils;
 
 import main.Game;
 
+import java.awt.*;
+import java.awt.geom.Rectangle2D;
+
 public class HelpMethods {
     public static boolean canMoveHere(float x, float y, float width, float height, int[][] lvlData){
         if(!isSolid(x,y,lvlData)){
@@ -32,5 +35,37 @@ public class HelpMethods {
             return true;
         }
         return false;
+    }
+    public static float getEntityXPosNextToWall(Rectangle2D.Float hitBox, float xSpeed){
+        int currentTile = (int)hitBox.x/Game.TILES_SIZE;
+        if (xSpeed > 0) {
+            //Right
+            int tileXPos = currentTile * Game.TILES_SIZE;
+            int xOffset = (int)(Game.TILES_SIZE - hitBox.width);
+            return tileXPos + xOffset - 1;
+        }else{
+            //Left
+            return currentTile * Game.TILES_SIZE;
+        }
+    }
+    public static float GetEntityYPosUnderRoofOrAboveFloor(Rectangle2D.Float hitBox, float airSpeed){
+        int currentTile = (int)(hitBox.y/ Game.TILES_SIZE);
+        if(airSpeed > 0){
+            //Faling
+            int tileYPos = currentTile * Game.TILES_SIZE;
+            int yOffset = (int)(Game.TILES_SIZE - hitBox.height);
+            return tileYPos + yOffset - 1;
+        }else{
+            //Jumping
+            return currentTile * Game.TILES_SIZE;
+        }
+    }
+    public static boolean isEntityOnFloor(Rectangle2D.Float hitBox, int[][] lvlData){
+        if(!isSolid(hitBox.x, hitBox.y + hitBox.height + 1, lvlData)){
+            if(!isSolid(hitBox.x + hitBox.width, hitBox.y + hitBox.height + 1 , lvlData)){
+                return false;
+            }
+        }
+        return true;
     }
 }

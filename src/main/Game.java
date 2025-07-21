@@ -33,7 +33,7 @@ public class Game implements Runnable {
 
     private void initClasses() {
         levelManager = new LevelManager(this);
-        player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE));
+        player = new Player(600, 200, (int) (64 * SCALE), (int) (40 * SCALE));
         player.loadLvlData(levelManager.getCurrentLevel().getLvlData());
     }
 
@@ -89,9 +89,10 @@ public class Game implements Runnable {
 
             if (System.currentTimeMillis() - lastCheck >= 1000) {
                 lastCheck = System.currentTimeMillis();
-                System.out.println("FPS: " + frames + ", UPS: " + updates);
+                System.out.println("FPS: " + frames + ", UPS: " + updates + " " +player.getInAir());
                 frames = 0;
                 updates = 0;
+
             }
         }
     }
