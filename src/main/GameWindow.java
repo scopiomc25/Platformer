@@ -2,20 +2,19 @@ package main;
 
 import javax.swing.*;
 
-public class GameWindow{
+public class GameWindow {
 
     private JFrame jFrame;
 
-    public GameWindow(GamePanel gamePanel){
+    public GameWindow(GamePanel gamePanel) {
         jFrame = new JFrame();
 
-        jFrame.setSize(400,400);
-        jFrame.setLocationRelativeTo(null);
         jFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        jFrame.setResizable(false);
-        jFrame.setTitle("Platformer Game");
-
         jFrame.add(gamePanel);
+        jFrame.pack();
+        jFrame.setTitle("Platformer Game");
+        jFrame.setResizable(false);
+        jFrame.setLocationRelativeTo(null);
 
         jFrame.setVisible(true);
     }
