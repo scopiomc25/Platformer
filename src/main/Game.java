@@ -54,6 +54,15 @@ public class Game implements Runnable {
             case MENU -> {
 				menu.update();
 			}
+            case OPTIONS -> {
+
+            }
+            case QUIT -> {
+
+            }
+            default -> {
+                System.exit(0);
+            }
         }
     }
 
@@ -65,7 +74,16 @@ public class Game implements Runnable {
 			case MENU -> {
 				menu.draw(g);
 			}
-		}
+            case OPTIONS -> {
+
+            }
+            case QUIT -> {
+
+            }
+            default -> {
+                System.exit(0);
+            }
+        }
     }
 
     @Override
