@@ -11,6 +11,8 @@ public class LevelManager {
     private Game game;
     private BufferedImage[] levelSprite;
     private Level levelOne;
+    private int frames;
+    private int updates;
 
     public LevelManager(Game game) {
         this.game = game;
@@ -34,6 +36,10 @@ public class LevelManager {
             for (int i = 0; i < Game.TILES_IN_WIDTH; i++) {
                 int index = levelOne.getSpriteIndex(i, j);
                 g.drawImage(levelSprite[index], Game.TILES_SIZE * i, Game.TILES_SIZE * j, Game.TILES_SIZE, Game.TILES_SIZE, null);
+                g.setColor(Color.black);
+                g.fillRect(0, 0, 130,35);
+                g.setColor(Color.WHITE);
+                g.drawString("FPS: " + frames + " | UPS:" + updates, 10 , 20);
             }
         }
     }
@@ -44,5 +50,9 @@ public class LevelManager {
 
     public Level getCurrentLevel() {
         return levelOne;
+    }
+    public void updateFramesAndUpdates(int frames, int updates){
+        this.frames = frames;
+        this.updates = updates;
     }
 }

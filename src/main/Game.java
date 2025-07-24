@@ -1,26 +1,30 @@
 package main;
 
-import entities.Player;
-import lvls.LevelManager;
+import gamestates.Gamestate;
+import gamestates.Menu;
+import gamestates.Playing;
 
 import java.awt.*;
 
 public class Game implements Runnable {
 
-    public final static int TILES_DEFAULT_SIZE = 32;
-    public final static float SCALE = 2f;
+	public final static float SCALE = 2f;
+
+	public final static int TILES_DEFAULT_SIZE = 32;
     public final static int TILES_IN_WIDTH = 26;
     public final static int TILES_IN_HEIGHT = 14;
     public final static int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
     public final static int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
     public final static int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
+
     private final int FPS_SET = 120;
     private final int UPS_SET = 200;
+
     private GameWindow gameWindow;
     private GamePanel gamePanel;
     private Thread gameThread;
-    private Player player;
-    private LevelManager levelManager;
+	private Playing playing;
+	private Menu menu;
 
     public Game() {
         initClasses();
@@ -33,10 +37,8 @@ public class Game implements Runnable {
     }
 
     private void initClasses() {
-        levelManager = new LevelManager(this);
-        player = new Player(200, 200, (int) (64 * SCALE), (int) (40 * SCALE));
-        player.loadLvlData(levelManager.getCurrentLevel().getLvlData());
-
+		menu = new Menu(this);
+		playing = new Playing(this);
     }
 
     private void startGameLoop() {
@@ -45,13 +47,25 @@ public class Game implements Runnable {
     }
 
     public void update() {
-        levelManager.update();
-        player.update();
+		switch (Gamestate.state){
+            case PLAYING -> {
+				playing.update();
+			}
+            case MENU -> {
+				menu.update();
+			}
+        }
     }
 
     public void render(Graphics g) {
-        levelManager.draw(g);
-        player.render(g);
+		switch (Gamestate.state){
+			case PLAYING -> {
+				playing.draw(g);
+			}
+			case MENU -> {
+				menu.draw(g);
+			}
+		}
     }
 
     @Override
@@ -91,6 +105,7 @@ public class Game implements Runnable {
             if (System.currentTimeMillis() - lastCheck >= 1000) {
                 lastCheck = System.currentTimeMillis();
                 System.out.println("FPS: " + frames + " | UPS: " + updates);
+				playing.getLevelManager().updateFramesAndUpdates(frames,updates);
                 frames = 0;
                 updates = 0;
 
@@ -100,11 +115,16 @@ public class Game implements Runnable {
     }
 
     public void windowFocusLost() {
-        player.resetDirBooleans();
+		if(Gamestate.state == Gamestate.PLAYING){
+			playing.getPlayer().resetDirBooleans();
+		}
     }
 
-    public Player getPlayer() {
-        return player;
-    }
+	public Playing getPlaying() {
+		return playing;
+	}
 
+	public Menu getMenu() {
+		return menu;
+	}
 }
